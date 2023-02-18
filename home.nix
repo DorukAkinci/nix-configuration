@@ -1,15 +1,18 @@
 { config, lib, pkgs, ... }:
 {
     # hosts/YourHostName/default.nix - inside the returning attribute set
-    
+
     home-manager.useGlobalPkgs = true;
     home-manager.useUserPackages = true;
     home-manager.users.dorukakinci = { pkgs, lib, config, ... }: {
         home.stateVersion = "22.11";
         home.username = "dorukakinci";
-        #home.homeDirectory = "/Users/dorukakinci";
+        home.homeDirectory = "/Users/dorukakinci";
+
+        fonts.fontconfig.enable = true;
+
         home.packages = with pkgs; [
-            
+            (nerdfonts.override { fonts = [ "Meslo" ]; })
         ];
 
         programs.nix-index.enable = true;

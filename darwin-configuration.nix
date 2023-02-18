@@ -4,6 +4,8 @@
 { config, pkgs, lib, ... }:
 
 {
+  users.users.dorukakinci.home = "/Users/dorukakinci";
+  
   system = {
     defaults = {
       NSGlobalDomain = {
