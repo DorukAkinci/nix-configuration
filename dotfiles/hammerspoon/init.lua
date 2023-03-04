@@ -27,3 +27,4 @@ appWatcher:start()
 hs.alert.show("AppWatcher started")
 
 require "windowmanager"
+require "audioswitcher"
