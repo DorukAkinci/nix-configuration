@@ -49,6 +49,7 @@
       curl
       tree
       htop
+      unixtools.watch.out
       wget
       fzf
       jq
@@ -56,7 +57,7 @@
       just
       ripgrep
       dhall
-      awscli
+      awscli2
       k9s
       kubectl
       krew # krew install whoami  ## will be configured with a proper `nix flake` later 
@@ -111,6 +112,8 @@
       "clickup"
       "gpg-suite"
       "fork"
+      "quik" # gopro
+      "hammerspoon" # macos automation 
     ];
   };
 

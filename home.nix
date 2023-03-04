@@ -35,8 +35,13 @@
                     desktop-show="defaults write com.apple.finder CreateDesktop -bool true && killall Finder";
 
                     repo="cd ~/Git";
-                };
+                    ssh-add-work="ssh-add ~/.ssh/work.ssh";
 
+                    nix-switch="pushd ~/.nixpkgs && darwin-rebuild switch --flake .# && popd";
+                };
+                initExtra = ''
+                   export PATH=/opt/homebrew/bin:$PATH
+                '';
                 plugins = with pkgs; [
                     {
                         name = "zsh-syntax-highlighting";
