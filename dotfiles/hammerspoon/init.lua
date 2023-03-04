@@ -28,4 +28,4 @@ hs.alert.show("AppWatcher started")
 
 require "windowmanager"
 require "audioswitcher"
-require "clipboard"
+-- require "clipboard"

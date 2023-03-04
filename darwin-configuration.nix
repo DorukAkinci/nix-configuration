@@ -114,6 +114,7 @@
       "fork"
       "quik" # gopro
       "hammerspoon" # macos automation 
+      "raycast" # Spotlight alternative
     ];
   };
 
