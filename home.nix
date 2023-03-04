@@ -102,5 +102,10 @@
                 };
             };
         };
+
+        home.file.".hammerspoon" = {
+            source = ./dotfiles/hammerspoon;
+            recursive = true;
+        };
     };
 }
