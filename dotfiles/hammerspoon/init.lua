@@ -25,3 +25,5 @@ end
 appWatcher = hs.application.watcher.new(applicationWatcher)
 appWatcher:start()
 hs.alert.show("AppWatcher started")
+
+require "windowmanager"
