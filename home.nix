@@ -35,6 +35,8 @@
                     desktop-show="defaults write com.apple.finder CreateDesktop -bool true && killall Finder";
 
                     repo="cd ~/Git";
+
+                    ssh-add-dorukakinci="ssh-add ~/.ssh/kp_dorukakinci.pem";
                     ssh-add-work="ssh-add ~/.ssh/work.ssh";
 
                     nix-switch="pushd ~/.nixpkgs && darwin-rebuild switch --flake .# && popd";
