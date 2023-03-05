@@ -107,5 +107,10 @@
             source = ./dotfiles/hammerspoon;
             recursive = true;
         };
+
+        home.file.".raycast" = {
+            source = ./dotfiles/raycast;
+            recursive = true;
+        };
     };
 }
