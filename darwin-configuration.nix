@@ -115,6 +115,7 @@
       "quik" # gopro
       "hammerspoon" # macos automation 
       "raycast" # Spotlight alternative
+      "hyperkey" # Use your capslock key as a modifier
     ];
   };
 
