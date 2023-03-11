@@ -13,6 +13,8 @@
   
   # add the inputs declared above to the argument attribute set
   outputs = { self, nixpkgs, home-manager, darwin, unstable }: {
+    nixpkgs.config.allowUnfree = true;
+
     # we want `nix-darwin` and not gnu hello, so the packages stuff can go
     darwinConfigurations."TRENGDOAKMAC" = darwin.lib.darwinSystem {
         # you can have multiple darwinConfigurations per flake, one per hostname

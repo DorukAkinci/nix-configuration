@@ -30,8 +30,11 @@
         AppleShowAllExtensions = true;
       };
 
+      trackpad = {
+        Clicking = false;
+      };
+
       dock.autohide = false;
-      trackpad.TrackpadThreeFingerDrag = true;
     };
 
     keyboard = {
@@ -88,12 +91,13 @@
   # nix.package = pkgs.nix;
 
   # Create /etc/zshrc that loads the nix-darwin environment.
-  programs.zsh.enable = true;  # default shell on catalina
-  programs.zsh.enableBashCompletion = true;
-  programs.zsh.enableFzfCompletion = true;
-  programs.zsh.enableFzfGit = true;
-  programs.zsh.enableFzfHistory = true;
-  programs.zsh.enableSyntaxHighlighting = true;
+  ### MIGRATED TO HOME MANAGER ###
+  # programs.zsh.enable = true;  # default shell on catalina
+  # programs.zsh.enableBashCompletion = true;
+  # programs.zsh.enableFzfCompletion = true;
+  # programs.zsh.enableFzfGit = true;
+  # programs.zsh.enableFzfHistory = true;
+  # programs.zsh.enableSyntaxHighlighting = true;
 
   homebrew = {
     enable = true;
