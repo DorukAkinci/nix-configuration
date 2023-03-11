@@ -1,6 +1,6 @@
 { config, lib, pkgs, ... }:
 {
-    #home-manager.useUserPackages = true;
+    home-manager.useUserPackages = true;
     home-manager.useGlobalPkgs = true;
     home-manager.users.dorukakinci = { pkgs, lib, config, ... }: {
         home.stateVersion = "22.11";
@@ -40,7 +40,7 @@
                     nix-switch="pushd ~/.nixpkgs && darwin-rebuild switch --flake .# && popd";
                 };
                 initExtra = ''
-                   export PATH=/opt/homebrew/bin:$PATH  ### Homebrew
+                   export PATH=/opt/homebrew/bin:/run/current-system/sw/bin:$PATH  ### Homebrew and NIX paths
                    export EDITOR=vim
                 '';
                 plugins = with pkgs; [
@@ -209,6 +209,10 @@
                         };
                     };
                     
+                    mouse_bindings = [
+                        { mouse = "Middle"; mode = "~Vi"; action = "PasteSelection"; }
+                    ];
+
                     ## keyboard maps
                     key_bindings = [
                         { key = "V"; mods = "Command"; action = "Paste"; }
@@ -223,6 +227,12 @@
                         { key = "Right"; mods = "Command"; chars = ''\x1bOF''; mode = "AppCursor"; }
                         { key = "Back"; mods = "Command"; chars = ''\x15''; }
                         { key = "Back"; mods = "Alt"; chars = ''\x1b\x7f''; }
+
+                        # vi
+                        { key = "Left"; mods = "Alt"; mode = "Vi"; action = "WordLeft"; }
+                        { key = "Right"; mods = "Alt";  mode = "Vi"; action = "WordRight"; }
+                        { key = "Back"; mods = "Alt"; mode = "Vi"; action = "DeleteWordLeft"; }
+                        { key = "Delete"; mods = "Alt"; mode = "Vi"; action = "DeleteWordRight"; }
                     ];
                 };
             };
