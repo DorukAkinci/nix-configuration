@@ -230,9 +230,7 @@
 
                         # vi
                         { key = "Left"; mods = "Alt"; mode = "Vi"; action = "WordLeft"; }
-                        { key = "Right"; mods = "Alt";  mode = "Vi"; action = "WordRight"; }
-                        { key = "Back"; mods = "Alt"; mode = "Vi"; action = "DeleteWordLeft"; }
-                        { key = "Delete"; mods = "Alt"; mode = "Vi"; action = "DeleteWordRight"; }
+                        { key = "Right"; mods = "Alt"; mode = "Vi"; action = "WordRight"; }
                     ];
                 };
             };
