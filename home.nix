@@ -75,6 +75,21 @@
             fzf = {
                 enable = true;
                 enableZshIntegration = true;
+                # dracula color scheme
+                colors = { 
+                    fg = "#f8f8f2";
+                    bg = "#282a36";
+                    hl = "#bd93f9";
+                    "fg+" = "#f8f8f2";
+                    "bg+" = "#44475a";
+                    "hl+" = "#bd93f9";
+                    info = "#ffb86c";
+                    prompt = "#50fa7b";
+                    pointer = "#ff79c6";
+                    marker = "#ff79c6";
+                    spinner = "#ffb86c";
+                    header = "#6272a4";
+                };
             };
 
             lsd = {
@@ -125,6 +140,7 @@
                         TERM = "xterm-256color";
                     };
 
+                    # dracula color scheme
                     colors = {
                         primary = {
                             background = "#282a36";
@@ -207,9 +223,7 @@
                         { key = "Right"; mods = "Command"; chars = ''\x1bOF''; mode = "AppCursor"; }
                         { key = "Back"; mods = "Command"; chars = ''\x15''; }
                         { key = "Back"; mods = "Alt"; chars = ''\x1b\x7f''; }
-
                     ];
-                    
                 };
             };
         };
@@ -236,6 +250,5 @@
         };
         
         # osascript -e "tell application \"System Events\" to tell every desktop to set picture to \"~/.nixpkgs/dotfiles/nix/module/wallpaper/dracula-macos.png\" as POSIX file"
-
     };
 }
