@@ -47,8 +47,10 @@
 
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
+  #environment.variables.EDITOR = "nvim";
   environment.systemPackages = with pkgs; [
       vim
+      neovim-unwrapped
       curl
       tree
       htop
@@ -91,13 +93,13 @@
   # nix.package = pkgs.nix;
 
   # Create /etc/zshrc that loads the nix-darwin environment.
-  ### MIGRATED TO HOME MANAGER ###
-  # programs.zsh.enable = true;  # default shell on catalina
-  # programs.zsh.enableBashCompletion = true;
-  # programs.zsh.enableFzfCompletion = true;
-  # programs.zsh.enableFzfGit = true;
-  # programs.zsh.enableFzfHistory = true;
-  # programs.zsh.enableSyntaxHighlighting = true;
+  ### MIGRATED TO HOME MANAGER ###  ### THIS IS NOT WORKING FOR SOME REASON MAYBE BECAUSE OF THE FILE LINKS/DEPENDECIES ###
+  programs.zsh.enable = true;  # default shell on catalina
+  programs.zsh.enableBashCompletion = true;
+  programs.zsh.enableFzfCompletion = true;
+  programs.zsh.enableFzfGit = true;
+  programs.zsh.enableFzfHistory = true;
+  programs.zsh.enableSyntaxHighlighting = true;
 
   homebrew = {
     enable = true;

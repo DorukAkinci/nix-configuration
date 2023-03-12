@@ -23,6 +23,8 @@
                 dotDir = ".config/zsh";
                 enableAutosuggestions = true;
                 enableCompletion = true;
+                enableSyntaxHighlighting = true;
+
                 shellAliases = {
                     ls="lsd";
                     l="ls -l";
@@ -40,8 +42,8 @@
                     nix-switch="pushd ~/.nixpkgs && darwin-rebuild switch --flake .# && popd";
                 };
                 initExtra = ''
-                   export PATH=/opt/homebrew/bin:/run/current-system/sw/bin:$PATH  ### Homebrew and NIX paths
-                   export EDITOR=vim
+                   export PATH=/opt/homebrew/bin:/run/current-system/sw/bin:/Users/dorukakinci/.local/bin:$PATH  ### Homebrew and NIX paths
+                   export EDITOR=nvim
                 '';
                 plugins = with pkgs; [
                     # {
@@ -70,6 +72,16 @@
                         { name = "plugins/command-not-found"; tags = [from:oh-my-zsh]; }
                     ];
                 };
+            };
+            
+            helix = {
+                enable = true;
+                settings = {
+                    theme = "dracula";
+                };
+                languages = [
+                    "hcl"
+                ];
             };
 
             fzf = {
@@ -227,10 +239,6 @@
                         { key = "Right"; mods = "Command"; chars = ''\x1bOF''; mode = "AppCursor"; }
                         { key = "Back"; mods = "Command"; chars = ''\x15''; }
                         { key = "Back"; mods = "Alt"; chars = ''\x1b\x7f''; }
-
-                        # vi
-                        { key = "Left"; mods = "Alt"; mode = "Vi"; action = "WordLeft"; }
-                        { key = "Right"; mods = "Alt"; mode = "Vi"; action = "WordRight"; }
                     ];
                 };
             };
@@ -257,6 +265,6 @@
             recursive = true;
         };
         
-        # osascript -e "tell application \"System Events\" to tell every desktop to set picture to \"~/.nixpkgs/dotfiles/nix/module/wallpaper/dracula-macos.png\" as POSIX file"
+        # osascript -e "tell application \"System Events\" to tell every desktop to set picture to \"/Users/dorukakinci/.nixpkgs/dotfiles/nix/module/wallpaper/dracula-macos.png\" as POSIX file"
     };
 }
