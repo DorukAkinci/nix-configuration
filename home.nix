@@ -10,7 +10,7 @@
         fonts.fontconfig.enable = true;
 
         home.packages = with pkgs; [
-            (nerdfonts.override { fonts = [ "Meslo" ]; })
+            (nerdfonts.override { fonts = [ "FiraCode" "Meslo" ]; })
         ];
 
         programs.nix-index.enable = true;
@@ -42,8 +42,9 @@
                     nix-switch="pushd ~/.nixpkgs && darwin-rebuild switch --flake .# && popd";
                 };
                 initExtra = ''
-                   export PATH=/opt/homebrew/bin:/run/current-system/sw/bin:/Users/dorukakinci/.local/bin:$PATH  ### Homebrew and NIX paths
-                   export EDITOR=nvim
+                   export PATH=/opt/homebrew/bin:/run/current-system/sw/bin:/Users/dorukakinci/.local/bin:$PATH:$NIX_PATH:  ### Homebrew and NIX paths
+                   export EDITOR=lvim
+                   export VISUAL=lvim
                 '';
                 plugins = with pkgs; [
                     # {
@@ -143,10 +144,14 @@
                     }; 
 
                     font = {
-                        size = 16;
-                        normal = { family = "MesloLGS NF"; style = "Regular";};
-                        bold = { family = "MesloLGS NF"; style = "Bold";};
-                        italic = { family = "MesloLGS NF"; style = "Italic";};
+                        size = 17;
+                        normal = { family = "FiraCode Nerd Font"; style = "Regular";};
+                        bold = { family = "FiraCode Nerd Font"; style = "Bold";};
+                        italic = { family = "FiraCode Nerd Font"; style = "Italic";};
+                        # size = 16;
+                        # normal = { family = "MesloLGS NF"; style = "Regular";};
+                        # bold = { family = "MesloLGS NF"; style = "Bold";};
+                        # italic = { family = "MesloLGS NF"; style = "Italic";};
                     };
                     env = {
                         TERM = "xterm-256color";

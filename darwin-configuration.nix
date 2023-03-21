@@ -50,7 +50,7 @@
   #environment.variables.EDITOR = "nvim";
   environment.systemPackages = with pkgs; [
       vim
-      neovim-unwrapped
+      #neovim-unwrapped
       curl
       tree
       htop
