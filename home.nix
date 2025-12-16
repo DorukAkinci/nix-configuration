@@ -83,7 +83,6 @@
                    export EDITOR=nvim
                    export VISUAL=nvim
                    eval "$(github-copilot-cli alias zsh)"
-                   [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
                 '';
                 oh-my-zsh = {
                     enable = true;
