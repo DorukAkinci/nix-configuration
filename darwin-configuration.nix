@@ -4,8 +4,10 @@
 { config, pkgs, lib, ... }:
 
 {
+  system.primaryUser = "dorukakinci";
   users.users.dorukakinci.home = "/Users/dorukakinci";
   
+  nixpkgs.config.allowUnfree = true;
   system = {
     defaults = {
       NSGlobalDomain = {
@@ -43,7 +45,7 @@
     };
   };
 
-  security.pam.enableSudoTouchIdAuth = true;
+  security.pam.services.sudo_local.touchIdAuth = true;
 
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
@@ -66,6 +68,7 @@
       k9s
       kubectl
       krew # krew install whoami  ## will be configured with a proper `nix flake` later 
+      #stern # k8s multi pod log tailing
       minikube
       kubernetes-helm
       argocd
@@ -73,6 +76,7 @@
       tfk8s
       tflint
       tfsec
+      gh # github cli
     ];
 
   # Use a custom configuration.nix location.
@@ -84,21 +88,21 @@
   nix.extraOptions = ''
     auto-optimise-store = true
     experimental-features = nix-command flakes
-    '' + lib.optionalString (pkgs.system == "aarch64-darwin") ''
+    '' + lib.optionalString (pkgs.stdenv.hostPlatform.system == "aarch64-darwin") ''
       extra-platforms = x86_64-darwin aarch64-darwin
     '';
 
-  # Auto upgrade nix package and the daemon service.
-  services.nix-daemon.enable = true;
+  # nix-daemon is managed automatically (nix.enable defaults to true)
   # nix.package = pkgs.nix;
 
   # Create /etc/zshrc that loads the nix-darwin environment.
   ### MIGRATED TO HOME MANAGER ###  ### THIS IS NOT WORKING FOR SOME REASON MAYBE BECAUSE OF THE FILE LINKS/DEPENDECIES ###
   programs.zsh.enable = true;  # default shell on catalina
   programs.zsh.enableBashCompletion = true;
-  programs.zsh.enableFzfCompletion = true;
-  programs.zsh.enableFzfGit = true;
-  programs.zsh.enableFzfHistory = true;
+  # fzf integration handled by home-manager (avoids conflict with modern fzf --zsh)
+  programs.zsh.enableFzfCompletion = false;
+  programs.zsh.enableFzfGit = false;
+  programs.zsh.enableFzfHistory = false;
   programs.zsh.enableSyntaxHighlighting = true;
 
   homebrew = {
@@ -106,7 +110,7 @@
     onActivation.autoUpdate = true;
     casks = [
       "visual-studio-code"
-      "docker"
+      "docker-desktop"
       "flameshot"
       "keepassxc"
       "leapp"
@@ -119,9 +123,17 @@
       "gpg-suite"
       "fork"
       "quik" # gopro
-      "hammerspoon" # macos automation 
+      "hammerspoon" # macos automation
       "raycast" # Spotlight alternative
       "hyperkey" # Use your capslock key as a modifier
+      "claude"
+      "claude-code"
+      "chatgpt"
+      "dbeaver-community"
+      "ghostty"
+      "font-hack-nerd-font"
+      "elgato-stream-deck"
+      "microsoft-office"
     ];
   };
 

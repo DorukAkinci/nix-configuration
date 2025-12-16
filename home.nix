@@ -3,14 +3,20 @@
     home-manager.useUserPackages = true;
     home-manager.useGlobalPkgs = true;
     home-manager.users.dorukakinci = { pkgs, lib, config, ... }: {
-        home.stateVersion = "22.11";
+        home.stateVersion = "25.11";
         home.username = "dorukakinci";
         home.homeDirectory = "/Users/dorukakinci";
+
+        # Disable app copying (blocked by company MDM)
+        targets.darwin.copyApps.enable = false;
+        # Show battery percentage in menu bar
+        targets.darwin.currentHostDefaults."com.apple.controlcenter".BatteryShowPercentage = true;
 
         fonts.fontconfig.enable = true;
 
         home.packages = with pkgs; [
-            (nerdfonts.override { fonts = [ "FiraCode" "Meslo" ]; })
+            nerd-fonts.fira-code
+            nerd-fonts.meslo-lg
         ];
 
         programs.nix-index.enable = true;
@@ -20,16 +26,16 @@
             zsh = {
                 enable = true;
                 autocd = true;
-                dotDir = ".config/zsh";
-                enableAutosuggestions = true;
+                dotDir = "${config.home.homeDirectory}/.config/zsh";
+                autosuggestion.enable = true;
                 enableCompletion = true;
-                enableSyntaxHighlighting = true;
+                syntaxHighlighting.enable = true;
 
                 shellAliases = {
-                    ls="lsd";
-                    l="ls -l";
-                    ll="ls -la";
-                    lt="ls --tree";
+                    git="LANG=en_US git";
+                    LANG="en_US.UTF-8";
+                    LANG_ALL="en_US.UTF-8";
+                    # ls, ll, la, lt, lla, llt are provided by lsd module
                     coffee="caffeinate -u -t 43200";
                     desktop-hide="defaults write com.apple.finder CreateDesktop -bool false && killall Finder";
                     desktop-show="defaults write com.apple.finder CreateDesktop -bool true && killall Finder";
@@ -39,12 +45,16 @@
                     ssh-add-dorukakinci="ssh-add ~/.ssh/kp_dorukakinci.pem";
                     ssh-add-work="ssh-add ~/.ssh/work.ssh";
 
-                    nix-switch="pushd ~/.nixpkgs && darwin-rebuild switch --flake .# && popd";
+                    nix-switch="pushd ~/.nixpkgs && sudo darwin-rebuild switch --flake .# && popd";
+
+                    bedrock-token="source /Users/dorukakinci/Git/bedrock-token-generator/get-bedrock-token.sh";
                 };
-                initExtra = ''
-                   export PATH=/opt/homebrew/bin:/run/current-system/sw/bin:/Users/dorukakinci/.local/bin:$PATH:$NIX_PATH:  ### Homebrew and NIX paths
-                   export EDITOR=lvim
-                   export VISUAL=lvim
+                initContent = ''
+                   export PATH=/opt/homebrew/bin:/opt/homebrew/opt/gnu-sed/libexec/gnubin:/run/current-system/sw/bin:/Users/dorukakinci/.local/bin:$PATH:$NIX_PATH:  ### Homebrew and NIX paths
+                   export EDITOR=nvim
+                   export VISUAL=nvim
+                   eval "$(github-copilot-cli alias zsh)"
+                   [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
                 '';
                 plugins = with pkgs; [
                     # {
@@ -62,6 +72,9 @@
                     enable = true;
                     plugins = [
                         "aws"
+                        "vi-mode"
+                        "copypath"
+                        "z"
                     ];
                 };
 
@@ -73,16 +86,6 @@
                         { name = "plugins/command-not-found"; tags = [from:oh-my-zsh]; }
                     ];
                 };
-            };
-            
-            helix = {
-                enable = true;
-                settings = {
-                    theme = "dracula";
-                };
-                languages = [
-                    "hcl"
-                ];
             };
 
             fzf = {
@@ -127,6 +130,22 @@
                     "jobs"
                     "exit"
                 ];
+            };
+
+            ghostty = {
+                enable = true;
+                package = null; # installed via homebrew (nixpkgs doesn't support darwin)
+                settings = {
+                    theme = "Dracula+";
+                    background = "#000000";
+                    font-size = 15;
+                    clipboard-paste-protection = false;
+                    keybind = [
+                        "shift+enter=text:\\x1b\\r"
+                        "cmd+c=copy_to_clipboard"
+                        "cmd+v=paste_from_clipboard"
+                    ];
+                };
             };
 
             alacritty = {
@@ -225,7 +244,7 @@
                             white = "#ffffff";
                         };
                     };
-                    
+
                     mouse_bindings = [
                         { mouse = "Middle"; mode = "~Vi"; action = "PasteSelection"; }
                     ];
@@ -269,7 +288,7 @@
             source = ./dotfiles/raycast;
             recursive = true;
         };
-        
+
         # osascript -e "tell application \"System Events\" to tell every desktop to set picture to \"/Users/dorukakinci/.nixpkgs/dotfiles/nix/module/wallpaper/dracula-macos.png\" as POSIX file"
     };
 }

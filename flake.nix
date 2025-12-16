@@ -2,12 +2,12 @@
   description = "DorukAkinci's Nix Flake";
 
   inputs = {
-      nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-22.11-darwin";
+      nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-25.11-darwin";
       unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-      home-manager.url = "github:nix-community/home-manager";
+      home-manager.url = "github:nix-community/home-manager/release-25.11";
       home-manager.inputs.nixpkgs.follows = "nixpkgs";
       # nix will normally use the nixpkgs defined in home-managers inputs, we only want one copy of nixpkgs though
-      darwin.url = "github:lnl7/nix-darwin";
+      darwin.url = "github:lnl7/nix-darwin/nix-darwin-25.11";
       darwin.inputs.nixpkgs.follows = "nixpkgs"; # ...
   };
   
