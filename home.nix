@@ -2,7 +2,36 @@
 {
     home-manager.useUserPackages = true;
     home-manager.useGlobalPkgs = true;
-    home-manager.users.dorukakinci = { pkgs, lib, config, ... }: {
+    home-manager.users.dorukakinci = { pkgs, lib, config, ... }:
+    let
+      dracula = {
+        bg = "#282a36";
+        fg = "#f8f8f2";
+        selection = "#44475a";
+        comment = "#6272a4";
+        cyan = "#8be9fd";
+        green = "#50fa7b";
+        orange = "#ffb86c";
+        pink = "#ff79c6";
+        purple = "#bd93f9";
+        red = "#ff5555";
+        yellow = "#f1fa8c";
+        # Additional colors for alacritty
+        currentLine = "#44475a";
+        brightWhite = "#ffffff";
+        darkBg = "#21222c";
+        bright = {
+          black = "#6272a4";
+          red = "#ff6e6e";
+          green = "#69ff94";
+          yellow = "#ffffa5";
+          blue = "#d6acff";
+          magenta = "#ff92df";
+          cyan = "#a4ffff";
+          white = "#ffffff";
+        };
+      };
+    in {
         home.stateVersion = "25.11";
         home.username = "dorukakinci";
         home.homeDirectory = "/Users/dorukakinci";
@@ -50,24 +79,12 @@
                     bedrock-token="source /Users/dorukakinci/Git/bedrock-token-generator/get-bedrock-token.sh";
                 };
                 initContent = ''
-                   export PATH=/opt/homebrew/bin:/opt/homebrew/opt/gnu-sed/libexec/gnubin:/run/current-system/sw/bin:/Users/dorukakinci/.local/bin:$PATH:$NIX_PATH:  ### Homebrew and NIX paths
+                   export PATH=/opt/homebrew/bin:/opt/homebrew/opt/gnu-sed/libexec/gnubin:/run/current-system/sw/bin:/Users/dorukakinci/.local/bin:$PATH
                    export EDITOR=nvim
                    export VISUAL=nvim
                    eval "$(github-copilot-cli alias zsh)"
                    [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
                 '';
-                plugins = with pkgs; [
-                    # {
-                    #     name = "zsh-syntax-highlighting";
-                    #     src = pkgs.fetchFromGitHub {
-                    #         owner = "zsh-users";
-                    #         repo = "zsh-syntax-highlighting";
-                    #         rev = "0.6.0";
-                    #         sha256 = "0zmq66dzasmr5pwribyh4kbkk23jxbpdw4rjxx0i7dx8jjp2lzl4";
-                    #     };
-                    #     file = "zsh-syntax-highlighting.zsh";
-                    # }
-                ];
                 oh-my-zsh = {
                     enable = true;
                     plugins = [
@@ -81,7 +98,6 @@
                 zplug = {
                     enable = true;
                     plugins = [
-                        { name = "plugins/zsh-syntax-highlighting"; tags = [from:oh-my-zsh]; }
                         { name = "plugins/colored-man-pages"; tags = [from:oh-my-zsh]; }
                         { name = "plugins/command-not-found"; tags = [from:oh-my-zsh]; }
                     ];
@@ -91,25 +107,29 @@
             fzf = {
                 enable = true;
                 enableZshIntegration = true;
-                # dracula color scheme
-                colors = { 
-                    fg = "#f8f8f2";
-                    bg = "#282a36";
-                    hl = "#bd93f9";
-                    "fg+" = "#f8f8f2";
-                    "bg+" = "#44475a";
-                    "hl+" = "#bd93f9";
-                    info = "#ffb86c";
-                    prompt = "#50fa7b";
-                    pointer = "#ff79c6";
-                    marker = "#ff79c6";
-                    spinner = "#ffb86c";
-                    header = "#6272a4";
+                colors = {
+                    fg = dracula.fg;
+                    bg = dracula.bg;
+                    hl = dracula.purple;
+                    "fg+" = dracula.fg;
+                    "bg+" = dracula.selection;
+                    "hl+" = dracula.purple;
+                    info = dracula.orange;
+                    prompt = dracula.green;
+                    pointer = dracula.pink;
+                    marker = dracula.pink;
+                    spinner = dracula.orange;
+                    header = dracula.comment;
                 };
             };
 
             lsd = {
                 enable = true;
+            };
+
+            desktoppr = {
+                enable = true;
+                settings.picture = ./dotfiles/nix/module/wallpaper/dracula-macos.png;
             };
 
             powerline-go = {
@@ -153,35 +173,30 @@
                 settings = {
                     live_config_reload = true;
                     use_thin_strokes = true; ## defaults write org.alacritty AppleFontSmoothing -int 0
-                    
+
                     # use better window sizes for 2k monitor.
                     window = {
                         dimensions = {
                             columns = 125;
                             lines = 40;
                         };
-                    }; 
+                    };
 
                     font = {
                         size = 17;
                         normal = { family = "FiraCode Nerd Font"; style = "Regular";};
                         bold = { family = "FiraCode Nerd Font"; style = "Bold";};
                         italic = { family = "FiraCode Nerd Font"; style = "Italic";};
-                        # size = 16;
-                        # normal = { family = "MesloLGS NF"; style = "Regular";};
-                        # bold = { family = "MesloLGS NF"; style = "Bold";};
-                        # italic = { family = "MesloLGS NF"; style = "Italic";};
                     };
                     env = {
                         TERM = "xterm-256color";
                     };
 
-                    # dracula color scheme
                     colors = {
                         primary = {
-                            background = "#282a36";
-                            foreground = "#f8f8f2";
-                            bright_foreground = "#ffffff";
+                            background = dracula.bg;
+                            foreground = dracula.fg;
+                            bright_foreground = dracula.brightWhite;
                         };
                         cursor = {
                             text = "CellBackground";
@@ -193,26 +208,26 @@
                         };
                         search = {
                             matches = {
-                                foreground = "#44475a";
-                                background = "#50fa7b";
+                                foreground = dracula.selection;
+                                background = dracula.green;
                             };
                             focused_match = {
-                                foreground = "#44475a";
-                                background = "#ffb86c";
+                                foreground = dracula.selection;
+                                background = dracula.orange;
                             };
                         };
                         footer_bar = {
-                            background = "#282a36";
-                            foreground = "#f8f8f2";
+                            background = dracula.bg;
+                            foreground = dracula.fg;
                         };
                         hints = {
                             start = {
-                                foreground = "#282a36";
-                                background = "#f1fa8c";
+                                foreground = dracula.bg;
+                                background = dracula.yellow;
                             };
                             end = {
-                                foreground = "#f1fa8c";
-                                background = "#282a36";
+                                foreground = dracula.yellow;
+                                background = dracula.bg;
                             };
                         };
                         line_indicator = {
@@ -221,28 +236,19 @@
                         };
                         selection = {
                             text = "CellForeground";
-                            background = "#44475a";
+                            background = dracula.selection;
                         };
                         normal = {
-                            black = "#21222c";
-                            red = "#ff5555";
-                            green = "#50fa7b";
-                            yellow = "#f1fa8c";
-                            blue = "#bd93f9";
-                            magenta = "#ff79c6";
-                            cyan = "#8be9fd";
-                            white = "#f8f8f2";
+                            black = dracula.darkBg;
+                            red = dracula.red;
+                            green = dracula.green;
+                            yellow = dracula.yellow;
+                            blue = dracula.purple;
+                            magenta = dracula.pink;
+                            cyan = dracula.cyan;
+                            white = dracula.fg;
                         };
-                        bright = {
-                            black = "#6272a4";
-                            red = "#ff6e6e";
-                            green = "#69ff94";
-                            yellow = "#ffffa5";
-                            blue = "#d6acff";
-                            magenta = "#ff92df";
-                            cyan = "#a4ffff";
-                            white = "#ffffff";
-                        };
+                        bright = dracula.bright;
                     };
 
                     mouse_bindings = [
@@ -268,17 +274,6 @@
             };
         };
 
-        home.file."mytestfile".text = lib.generators.toYAML {} {
-            templates = {
-                scm-init = "git";
-                params = {
-                    author-name = "Your Name"; # config.programs.git.userName;
-                    author-email = "youremail@example.com"; # config.programs.git.userEmail;
-                    github-username = "yourusername";
-                };
-            };
-        };
-
         home.file.".hammerspoon" = {
             source = ./dotfiles/hammerspoon;
             recursive = true;
@@ -288,7 +283,5 @@
             source = ./dotfiles/raycast;
             recursive = true;
         };
-
-        # osascript -e "tell application \"System Events\" to tell every desktop to set picture to \"/Users/dorukakinci/.nixpkgs/dotfiles/nix/module/wallpaper/dracula-macos.png\" as POSIX file"
     };
 }

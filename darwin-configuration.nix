@@ -1,12 +1,9 @@
-### darwin-rebuild switch
-# Home manager and Flakes support will be added later #
-
 { config, pkgs, lib, ... }:
 
 {
   system.primaryUser = "dorukakinci";
   users.users.dorukakinci.home = "/Users/dorukakinci";
-  
+
   nixpkgs.config.allowUnfree = true;
   system = {
     defaults = {
@@ -47,12 +44,8 @@
 
   security.pam.services.sudo_local.touchIdAuth = true;
 
-  # List packages installed in system profile. To search by name, run:
-  # $ nix-env -qaP | grep wget
-  #environment.variables.EDITOR = "nvim";
   environment.systemPackages = with pkgs; [
       vim
-      #neovim-unwrapped
       curl
       tree
       htop
@@ -79,12 +72,7 @@
       gh # github cli
     ];
 
-  # Use a custom configuration.nix location.
-  # $ darwin-rebuild switch -I darwin-config=$HOME/.config/nixpkgs/darwin/configuration.nix
-  # environment.darwinConfig = "$HOME/.config/nixpkgs/darwin/configuration.nix";
-
   # Enable experimental nix command and flakes
-  # nix.package = pkgs.nixUnstable;
   nix.extraOptions = ''
     auto-optimise-store = true
     experimental-features = nix-command flakes
@@ -92,18 +80,12 @@
       extra-platforms = x86_64-darwin aarch64-darwin
     '';
 
-  # nix-daemon is managed automatically (nix.enable defaults to true)
-  # nix.package = pkgs.nix;
-
-  # Create /etc/zshrc that loads the nix-darwin environment.
-  ### MIGRATED TO HOME MANAGER ###  ### THIS IS NOT WORKING FOR SOME REASON MAYBE BECAUSE OF THE FILE LINKS/DEPENDECIES ###
-  programs.zsh.enable = true;  # default shell on catalina
+  programs.zsh.enable = true;
   programs.zsh.enableBashCompletion = true;
   # fzf integration handled by home-manager (avoids conflict with modern fzf --zsh)
   programs.zsh.enableFzfCompletion = false;
   programs.zsh.enableFzfGit = false;
   programs.zsh.enableFzfHistory = false;
-  programs.zsh.enableSyntaxHighlighting = true;
 
   homebrew = {
     enable = true;
