@@ -67,7 +67,6 @@
               "defaults write com.apple.finder CreateDesktop -bool false && killall Finder";
             desktop-show =
               "defaults write com.apple.finder CreateDesktop -bool true && killall Finder";
-
             repo = "cd ~/Git";
 
             ssh-add-dorukakinci = "ssh-add ~/.ssh/kp_dorukakinci.pem";
@@ -82,6 +81,7 @@
               "source /Users/dorukakinci/Git/bedrock-token-generator/claude-bedrock.sh";
             claude-personal =
               "env -u AWS_BEARER_TOKEN_BEDROCK -u CLAUDE_CODE_USE_BEDROCK -u AWS_REGION claude";
+            claude-yolo = "claude --dangerously-skip-permissions";
           };
           initContent = ''
             export PATH=/opt/homebrew/bin:/opt/homebrew/opt/gnu-sed/libexec/gnubin:/run/current-system/sw/bin:/Users/dorukakinci/.local/bin:$PATH
