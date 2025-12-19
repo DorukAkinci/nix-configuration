@@ -29,9 +29,7 @@
         AppleShowAllExtensions = true;
       };
 
-      trackpad = {
-        Clicking = false;
-      };
+      trackpad = { Clicking = false; };
 
       dock.autohide = false;
     };
@@ -45,38 +43,39 @@
   security.pam.services.sudo_local.touchIdAuth = true;
 
   environment.systemPackages = with pkgs; [
-      vim
-      curl
-      tree
-      htop
-      unixtools.watch.out
-      wget
-      fzf
-      jq
-      yq
-      just
-      ripgrep
-      dhall
-      awscli2
-      k9s
-      kubectl
-      krew # krew install whoami  ## will be configured with a proper `nix flake` later 
-      #stern # k8s multi pod log tailing
-      minikube
-      kubernetes-helm
-      argocd
-      terraform
-      tfk8s
-      tflint
-      tfsec
-      gh # github cli
-    ];
+    vim
+    curl
+    tree
+    htop
+    unixtools.watch.out
+    wget
+    fzf
+    jq
+    yq
+    just
+    ripgrep
+    dhall
+    awscli2
+    k9s
+    kubectl
+    krew # krew install whoami  ## will be configured with a proper `nix flake` later
+    #stern # k8s multi pod log tailing
+    minikube
+    kubernetes-helm
+    argocd
+    terraform
+    tfk8s
+    tflint
+    tfsec
+    gh # github cli
+  ];
 
   # Enable experimental nix command and flakes
   nix.extraOptions = ''
     auto-optimise-store = true
     experimental-features = nix-command flakes
-    '' + lib.optionalString (pkgs.stdenv.hostPlatform.system == "aarch64-darwin") ''
+  '' + lib.optionalString
+    (pkgs.stdenv.hostPlatform.system == "aarch64-darwin") ''
       extra-platforms = x86_64-darwin aarch64-darwin
     '';
 
@@ -90,6 +89,7 @@
   homebrew = {
     enable = true;
     onActivation.autoUpdate = true;
+    brews = [ "rust" ];
     casks = [
       "visual-studio-code"
       "docker-desktop"
