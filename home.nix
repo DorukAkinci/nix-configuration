@@ -43,7 +43,10 @@
 
       fonts.fontconfig.enable = true;
 
-      home.packages = with pkgs; [ nerd-fonts.fira-code nerd-fonts.meslo-lg ];
+      home.packages = with pkgs; [
+        nerd-fonts.fira-code
+        nerd-fonts.meslo-lg
+      ];
 
       programs.nix-index.enable = true;
       programs.nix-index.enableZshIntegration = true;
@@ -84,10 +87,14 @@
             claude-yolo = "claude --dangerously-skip-permissions";
           };
           initContent = ''
-            export PATH=/opt/homebrew/bin:/opt/homebrew/opt/gnu-sed/libexec/gnubin:/run/current-system/sw/bin:/Users/dorukakinci/.local/bin:$PATH
+            export PATH=/etc/profiles/per-user/dorukakinci/bin:/opt/homebrew/bin:/opt/homebrew/opt/gnu-sed/libexec/gnubin:/run/current-system/sw/bin:/Users/dorukakinci/.local/bin:$PATH
             export EDITOR=nvim
             export VISUAL=nvim
+            export GPG_TTY=$(tty)
             eval "$(github-copilot-cli alias zsh)"
+
+            # Granted - AWS SSO profile switcher
+            alias assume="source assume"
           '';
           oh-my-zsh = {
             enable = true;
@@ -164,12 +171,119 @@
             background = "#000000";
             font-size = 15;
             clipboard-paste-protection = false;
+            command = "/bin/zsh -l -c 'exec tmux'";
             keybind = [
               "shift+enter=text:\\x1b\\r"
               "cmd+c=copy_to_clipboard"
               "cmd+v=paste_from_clipboard"
             ];
           };
+        };
+
+        tmux = {
+          enable = true;
+          shell = "/bin/zsh";
+          terminal = "tmux-256color";
+          prefix = "C-b";
+          mouse = true;
+          keyMode = "vi";
+          baseIndex = 1;
+          escapeTime = 0;
+          historyLimit = 50000;
+
+          plugins = with pkgs.tmuxPlugins; [
+            {
+              plugin = sensible;
+              extraConfig = ''
+                # Set PATH before any plugin scripts run
+                set-environment -g PATH "/etc/profiles/per-user/dorukakinci/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+              '';
+            }
+            open
+            {
+              plugin = catppuccin;
+              extraConfig = ''
+                # Theme flavor
+                set -g @catppuccin_flavor 'mocha'
+
+                # Window styling
+                set -g @catppuccin_window_status_style 'rounded'
+                set -g @catppuccin_window_number_position 'left'
+                set -g @catppuccin_window_default_text '#W'
+                set -g @catppuccin_window_current_text '#W'
+
+                # Custom module settings
+                set -g @catppuccin_date_time_text '%H:%M  %d-%b'
+              '';
+            }
+          ];
+
+          extraConfig = ''
+            # Override sensible's default-command (it uses /bin/sh)
+            set -g default-command "/bin/zsh"
+
+            # Pass window titles through to Ghostty
+            set -g set-titles on
+            set -g set-titles-string '#S:#W — #{pane_current_path}'
+
+            # Enable clickable hyperlinks (OSC 8) passthrough to Ghostty
+            set -as terminal-features 'xterm-ghostty:hyperlinks'
+            set -g allow-passthrough on
+
+            # Enable true color and undercurl support
+            set -ag terminal-overrides ",xterm-256color:RGB"
+            set -ag terminal-overrides ",xterm-ghostty:RGB"
+            set -as terminal-overrides ',*:Smulx=\E[4::%p1%dm'
+            set -as terminal-overrides ',*:Setulc=\E[58::2::%p1%{65536}%/%d::%p1%{256}%/%{255}%&%d::%p1%{255}%&%d%;m'
+
+            # splits and new windows keep current directory
+            bind | split-window -h -c "#{pane_current_path}"
+            bind - split-window -v -c "#{pane_current_path}"
+            bind c new-window -c "#{pane_current_path}"
+
+            # reload config
+            unbind r
+            bind r source-file ~/.config/tmux/tmux.conf
+
+            # navigate panes with prefix + hjkl
+            bind h select-pane -L
+            bind j select-pane -D
+            bind k select-pane -U
+            bind l select-pane -R
+
+            # resize panes with alt + hjkl
+            bind -n M-h resize-pane -L 5
+            bind -n M-j resize-pane -D 5
+            bind -n M-k resize-pane -U 5
+            bind -n M-l resize-pane -R 5
+
+            # pane borders - Catppuccin mocha colors
+            set -g pane-border-style 'fg=#313244'
+            set -g pane-active-border-style 'fg=#f38ba8,bold'
+            set -g pane-border-lines heavy
+
+            # vim-style copy mode
+            bind -T copy-mode-vi v send -X begin-selection
+            bind -T copy-mode-vi y send -X copy-selection-and-cancel
+
+            # quick window switching with Alt + number
+            bind -n M-1 select-window -t 1
+            bind -n M-2 select-window -t 2
+            bind -n M-3 select-window -t 3
+            bind -n M-4 select-window -t 4
+            bind -n M-5 select-window -t 5
+
+            # Status bar position
+            set -g status-position bottom
+            set -g status-right-length 100
+            set -g status-left-length 100
+
+            # Status bar using catppuccin modules (v2 syntax)
+            set -g status-left "#{E:@catppuccin_status_session}"
+            set -g status-right "#{E:@catppuccin_status_directory}"
+            set -ag status-right "#{E:@catppuccin_status_uptime}"
+            set -ag status-right "#{E:@catppuccin_status_date_time}"
+          '';
         };
 
         alacritty = {
