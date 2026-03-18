@@ -48,3 +48,17 @@ darwin-rebuild build --flake ~/.nixpkgs/.#
 - **fzf integration**: Handled by home-manager only (`enableFzfCompletion/Git/History = false` in darwin) to avoid version conflicts
 - **Ghostty**: Installed via Homebrew (`package = null`) since nixpkgs doesn't support darwin
 - **Primary user**: Set via `system.primaryUser = "dorukakinci"` (required in nix-darwin 25.11+)
+
+### Tmux + Ghostty Integration
+
+The tmux configuration has several critical settings that must be maintained:
+
+1. **Ghostty command**: Uses `/bin/zsh -l -c 'exec tmux'` to start tmux through a login shell, ensuring PATH is properly set before tmux starts
+
+2. **PATH for plugins**: The `sensible` plugin's `extraConfig` sets `set-environment -g PATH` BEFORE any plugin runs. This is critical because tmux plugin scripts need access to commands in PATH. Placing this in the main `extraConfig` is too late (runs after plugins)
+
+3. **Shell override**: The `sensible` plugin sets `default-command` to use `/bin/sh`. Must override with `set -g default-command "/bin/zsh"` in `extraConfig` to get zsh as the shell
+
+4. **Config file location**: Tmux uses `~/.config/tmux/tmux.conf` (XDG location). Delete any old `~/.tmux.conf` as it takes precedence
+
+5. **Testing changes**: After `nix-switch`, must kill tmux server (`tmux kill-server`) and restart Ghostty for changes to take effect
