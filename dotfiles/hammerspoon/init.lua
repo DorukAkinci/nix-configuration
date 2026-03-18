@@ -28,3 +28,14 @@ hs.alert.show("AppWatcher started")
 require "windowmanager"
 -- require "audioswitcher"
 -- require "clipboard"
+
+-- Remap ISO § key (keycode 10) to ` / ~ (keycode 50)
+-- Fixes built-in ISO keyboard producing §/± instead of `/~ with US layout
+isoTildeRemap = hs.eventtap.new({hs.eventtap.event.types.keyDown, hs.eventtap.event.types.keyUp}, function(event)
+    if event:getKeyCode() == 10 then
+        event:setKeyCode(50)
+        return false
+    end
+    return false
+end)
+isoTildeRemap:start()
