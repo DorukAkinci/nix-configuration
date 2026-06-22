@@ -35,6 +35,9 @@
       home.username = "dorukakinci";
       home.homeDirectory = "/Users/dorukakinci";
 
+      # Make bun reachable for PAI hook subprocesses (non-interactive shells)
+      home.sessionPath = [ "$HOME/.bun/bin" ];
+
       # Disable app copying (blocked by company MDM)
       targets.darwin.copyApps.enable = false;
       # Show battery percentage in menu bar
@@ -61,6 +64,7 @@
           syntaxHighlighting.enable = true;
 
           shellAliases = {
+            claude = "$HOME/.local/bin/claude";
             git = "LANG=en_US git";
             LANG = "en_US.UTF-8";
             LANG_ALL = "en_US.UTF-8";
@@ -85,6 +89,11 @@
             claude-personal =
               "env -u AWS_BEARER_TOKEN_BEDROCK -u CLAUDE_CODE_USE_BEDROCK -u AWS_REGION claude";
             claude-yolo = "claude --dangerously-skip-permissions";
+            # Jump to the PAI repo and launch the assistant from there.
+            # Inside cmux -> cmux claude-teams (teammate panes render as splits);
+            # bare terminal -> plain claude (no shim noise, no missing-session error).
+            pai =
+              "cd ~/.claude && { [ -n \"$CMUX_WORKSPACE_ID\" ] && cmux claude-teams --dangerously-skip-permissions || claude --dangerously-skip-permissions; }";
           };
           initContent = ''
             export PATH=/etc/profiles/per-user/dorukakinci/bin:/opt/homebrew/bin:/opt/homebrew/opt/gnu-sed/libexec/gnubin:/run/current-system/sw/bin:/Users/dorukakinci/.local/bin:$PATH
@@ -95,6 +104,13 @@
 
             # Granted - AWS SSO profile switcher
             alias assume="source assume"
+
+            # Ghostty shell integration, guarded on the script actually existing.
+            # Ghostty.app ships it (sourced); cmux sets GHOSTTY_RESOURCES_DIR to a
+            # bundle without it (skipped cleanly, no error).
+            if [[ -r "$GHOSTTY_RESOURCES_DIR/shell-integration/zsh/ghostty-integration" ]]; then
+              source "$GHOSTTY_RESOURCES_DIR/shell-integration/zsh/ghostty-integration"
+            fi
           '';
           oh-my-zsh = {
             enable = true;
@@ -164,6 +180,12 @@
 
         ghostty = {
           enable = true;
+          # HM's auto-injected zsh integration guards only on GHOSTTY_RESOURCES_DIR
+          # being set, not on the script existing. cmux (libghostty) sets that var
+          # to its own bundle, which ships no shell-integration script -> source
+          # errors. Disable the auto-inject; a file-existence-guarded source is
+          # added in programs.zsh.initContent instead.
+          enableZshIntegration = false;
           package =
             null; # installed via homebrew (nixpkgs doesn't support darwin)
           settings = {
@@ -171,7 +193,11 @@
             background = "#000000";
             font-size = 15;
             clipboard-paste-protection = false;
-            command = "/bin/zsh -l -c 'exec tmux'";
+            # Skip tmux inside cmux (it sets CMUX_SURFACE_ID): cmux owns
+            # tabs/panes/session-restore and reads OSC 777/99 notifications
+            # directly — a nested tmux would trap those escapes. Also avoid
+            # tmux-in-tmux nesting. Ghostty.app (no CMUX_SURFACE_ID) -> tmux.
+            command = "/bin/zsh -l -c 'if [ -z \"$TMUX\" ] && [ -z \"$CMUX_SURFACE_ID\" ]; then exec tmux; fi; exec /bin/zsh -i'";
             keybind = [
               "shift+enter=text:\\x1b\\r"
               "cmd+c=copy_to_clipboard"
