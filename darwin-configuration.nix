@@ -109,7 +109,6 @@
       "raycast" # Spotlight alternative
       "hyperkey" # Use your capslock key as a modifier
       "claude"
-      "claude-code"
       "chatgpt"
       "dbeaver-community"
       "ghostty"

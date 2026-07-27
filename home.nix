@@ -64,7 +64,6 @@
           syntaxHighlighting.enable = true;
 
           shellAliases = {
-            claude = "$HOME/.local/bin/claude";
             git = "LANG=en_US git";
             LANG = "en_US.UTF-8";
             LANG_ALL = "en_US.UTF-8";
