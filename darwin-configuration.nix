@@ -95,7 +95,7 @@
     k9s
     kubectl
     krew # krew install whoami  ## will be configured with a proper `nix flake` later
-    #stern # k8s multi pod log tailing
+    stern # k8s multi pod log tailing
     minikube
     kubernetes-helm
     argocd
@@ -104,7 +104,24 @@
     tflint
     tfsec
     gh # github cli
+    glab # gitlab cli
     bun # JS runtime — PAI hooks + Pulse depend on it (was a per-machine native install)
+    eksctl
+    skopeo # container image copy/inspect between registries
+    shellcheck
+    shfmt
+    pre-commit
+    go
+    pnpm
+    yarn
+    fd
+    bat
+    lsd
+    rclone
+    neovim
+    nushell
+    valkey
+    mycli
   ];
 
   # Enable experimental nix command and flakes
@@ -130,6 +147,8 @@
       "rust"
       "rtk" # token-optimizing CLI proxy (homebrew-core; hand-installed on #1 before this)
       "gemini-cli" # `gemini` — Google Gemini CLI (Pollux lane; hand-installed on #1 before this)
+      "gnu-sed" # home.nix PATH points at /opt/homebrew/opt/gnu-sed/libexec/gnubin
+      "opencode" # AI coding agent CLI (fast-moving; brew matches #1)
     ];
     casks = [
       "visual-studio-code"
@@ -157,6 +176,11 @@
       "antigravity-cli" # Google Antigravity CLI (`agy`) — agent terminal interface
       "chatgpt"
       "dbeaver-community"
+      "tailscale-app" # upstream renamed the `tailscale` cask
+      "obsidian"
+      "wispr-flow" # voice dictation
+      "yubico-authenticator"
+      "zoom"
       "ghostty"
       "font-hack-nerd-font"
       "elgato-stream-deck"
