@@ -4,6 +4,10 @@ let homeDir = "/Users/${username}";
 in {
   home-manager.useUserPackages = true;
   home-manager.useGlobalPkgs = true;
+  # A fresh Mac already has a stock ~/.zshrc etc. Without this, the FIRST
+  # switch on a new machine aborts with "Existing file ... would be clobbered".
+  # Renames the offender to <file>.backup instead of failing.
+  home-manager.backupFileExtension = "backup";
   home-manager.users.${username} = { pkgs, lib, config, ... }:
     let
       dracula = {
