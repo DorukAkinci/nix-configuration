@@ -37,6 +37,21 @@
       CustomUserPreferences = {
         # Raycast reads its global hotkey from this key at launch; ⌘Space.
         "com.raycast.macos".raycastGlobalHotkey = "Command-49";
+
+        # Hyperkey: caps lock → ⌘⌥⌃⇧ hyper modifier (parity with MacBook #1's
+        # live config; Paddle license stays a one-time manual activation).
+        # Keys observed on a v22 install — if a newer Hyperkey ignores them,
+        # set it once in the UI and re-sync these from `defaults read`.
+        "com.knollsoft.Hyperkey" = {
+          keyRemap = 1; # remapping enabled
+          capsLockRemapped = 2; # the remapped physical key = caps lock
+          capsLockKeycode = "-1";
+          hyperFlags = 1966080; # ⌘(0x100000)+⌥(0x80000)+⌃(0x40000)+⇧(0x20000)
+          executeQuickHyperKey = 2;
+          launchOnLogin = 1;
+          hideMenuBarIcon = 1;
+          SUEnableAutomaticChecks = 0;
+        };
       };
     };
 
