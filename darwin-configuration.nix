@@ -1,8 +1,9 @@
-{ config, pkgs, lib, ... }:
+# `username` comes from flake.nix specialArgs — it differs per machine.
+{ config, pkgs, lib, username, ... }:
 
 {
-  system.primaryUser = "dorukakinci";
-  users.users.dorukakinci.home = "/Users/dorukakinci";
+  system.primaryUser = username;
+  users.users.${username}.home = "/Users/${username}";
 
   nixpkgs.config.allowUnfree = true;
   system = {

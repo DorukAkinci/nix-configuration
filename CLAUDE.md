@@ -12,21 +12,50 @@ This is a nix-darwin + home-manager flake configuration for macOS (Apple Silicon
 # Apply configuration changes (requires sudo for system activation)
 nix-switch                    # alias defined in shell config
 
-# Manual equivalent
+# Manual equivalent — the bare `#` resolves the config matching this Mac's hostname
 sudo darwin-rebuild switch --flake ~/.nixpkgs/.#
+
+# Explicit host (needed when the hostname does not yet match a list entry)
+sudo darwin-rebuild switch --flake ~/.nixpkgs#TRENGDOAKMAC
 
 # Update flake inputs
 nix flake update
 
 # Check configuration without applying
 darwin-rebuild build --flake ~/.nixpkgs/.#
+
+# List every machine this flake can build
+nix eval .#darwinConfigurations --apply builtins.attrNames
 ```
+
+## Adding a machine
+
+This flake is multi-host. `flake.nix` holds a `hosts` list, and `nixpkgs.lib.genAttrs`
+builds one `darwinConfigurations.<hostname>` per entry from the **same** modules
+(`darwin-configuration.nix` + `home.nix`). Machines cannot drift apart — there is only
+one config; the hostname is the only input that differs.
+
+To onboard a new Mac, add one line:
+
+```nix
+hosts = [
+  "TRENGDOAKMAC" # MacBook #1
+  "NEWHOSTNAME"  # MacBook #2   <-- the whole change
+];
+```
+
+then on that machine: `sudo darwin-rebuild switch --flake ~/.nixpkgs#NEWHOSTNAME`.
+
+`networking.{hostName,computerName,localHostName}` are set from the list entry, so nix
+owns the machine name too — after the first switch the hostname *becomes* the list entry.
+Bootstrapping a machine that has no `darwin-rebuild` yet is covered in
+`~/mac-bootstrap/AGENT-INSTRUCTIONS.md`.
 
 ## Architecture
 
 ### File Structure
 
-- **flake.nix** - Flake entry point defining inputs (nixpkgs 25.11, nix-darwin 25.11, home-manager 25.11) and the darwin configuration for hostname `TRENGDOAKMAC`
+- **flake.nix** - Flake entry point defining inputs (nixpkgs 25.11, nix-darwin 25.11, home-manager 25.11) and, via the `hosts` list + `mkDarwin`, one darwin configuration per managed machine
 - **darwin-configuration.nix** - System-level settings: macOS defaults, system packages, Homebrew casks, zsh system config, Touch ID for sudo
 - **home.nix** - User-level settings via home-manager: shell aliases, terminal emulators (alacritty, ghostty), fzf, lsd, powerline-go, dotfile links
 - **dotfiles/** - Managed dotfiles (hammerspoon, raycast) linked via home.file

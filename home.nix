@@ -1,7 +1,10 @@
-{ config, lib, pkgs, ... }: {
+# `username` comes from flake.nix specialArgs — it differs per machine.
+{ config, lib, pkgs, username, ... }:
+let homeDir = "/Users/${username}";
+in {
   home-manager.useUserPackages = true;
   home-manager.useGlobalPkgs = true;
-  home-manager.users.dorukakinci = { pkgs, lib, config, ... }:
+  home-manager.users.${username} = { pkgs, lib, config, ... }:
     let
       dracula = {
         bg = "#282a36";
@@ -32,8 +35,8 @@
       };
     in {
       home.stateVersion = "25.11";
-      home.username = "dorukakinci";
-      home.homeDirectory = "/Users/dorukakinci";
+      home.username = username;
+      home.homeDirectory = homeDir;
 
       # Make bun reachable for PAI hook subprocesses (non-interactive shells)
       home.sessionPath = [ "$HOME/.bun/bin" ];
@@ -82,9 +85,9 @@
               "pushd ~/.nixpkgs && sudo darwin-rebuild switch --flake .# && popd";
 
             bedrock-token =
-              "source /Users/dorukakinci/Git/bedrock-token-generator/get-bedrock-token.sh";
+              "source ${homeDir}/Git/bedrock-token-generator/get-bedrock-token.sh";
             claude-bedrock =
-              "source /Users/dorukakinci/Git/bedrock-token-generator/claude-bedrock.sh";
+              "source ${homeDir}/Git/bedrock-token-generator/claude-bedrock.sh";
             claude-personal =
               "env -u AWS_BEARER_TOKEN_BEDROCK -u CLAUDE_CODE_USE_BEDROCK -u AWS_REGION claude";
             claude-yolo = "claude --dangerously-skip-permissions";
@@ -95,7 +98,7 @@
               "cd ~/.claude && { [ -n \"$CMUX_WORKSPACE_ID\" ] && cmux claude-teams --dangerously-skip-permissions || claude --dangerously-skip-permissions; }";
           };
           initContent = ''
-            export PATH=/etc/profiles/per-user/dorukakinci/bin:/opt/homebrew/bin:/opt/homebrew/opt/gnu-sed/libexec/gnubin:/run/current-system/sw/bin:/Users/dorukakinci/.local/bin:$PATH
+            export PATH=/etc/profiles/per-user/${username}/bin:/opt/homebrew/bin:/opt/homebrew/opt/gnu-sed/libexec/gnubin:/run/current-system/sw/bin:${homeDir}/.local/bin:$PATH
             export EDITOR=nvim
             export VISUAL=nvim
             export GPG_TTY=$(tty)
@@ -221,7 +224,7 @@
               plugin = sensible;
               extraConfig = ''
                 # Set PATH before any plugin scripts run
-                set-environment -g PATH "/etc/profiles/per-user/dorukakinci/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+                set-environment -g PATH "/etc/profiles/per-user/${username}/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
               '';
             }
             open

@@ -12,19 +12,39 @@
   };
 
   # add the inputs declared above to the argument attribute set
-  outputs = { self, nixpkgs, home-manager, darwin, unstable }: {
-    nixpkgs.config.allowUnfree = true;
+  outputs = { self, nixpkgs, home-manager, darwin, unstable }:
+    let
+      # ── Every Mac managed by this flake ──────────────────────────────────
+      # Adding a machine is ONE line here. Each host is built from the exact
+      # same modules (darwin-configuration.nix + home.nix), so the machines
+      # stay in lockstep by construction — hostname and account name are the
+      # only inputs that differ. Build a specific host with:
+      #   darwin-rebuild switch --flake ~/.nixpkgs#<HOSTNAME>
+      hosts = {
+        TRENGDOAKMAC = { username = "dorukakinci"; }; # MacBook #1
 
-    # we want `nix-darwin` and not gnu hello, so the packages stuff can go
-    darwinConfigurations."TRENGDOAKMAC" = darwin.lib.darwinSystem {
-      # you can have multiple darwinConfigurations per flake, one per hostname
+        # MacBook #2 — uncomment and set the real hostname on first bootstrap.
+        # The account there is `doruk.akinci` (note the dot), not `dorukakinci`.
+        # NEWHOSTNAME = { username = "doruk.akinci"; };
+      };
 
-      system = "aarch64-darwin"; # "x86_64-darwin" if you're using a pre M1 mac
-      modules = [
-        ./darwin-configuration.nix
-        home-manager.darwinModules.home-manager
-        ./home.nix
-      ];
+      mkDarwin = hostname: { username }: darwin.lib.darwinSystem {
+        system = "aarch64-darwin"; # "x86_64-darwin" if you're using a pre M1 mac
+        specialArgs = { inherit hostname username; };
+        modules = [
+          # Machine identity is declarative too — nix owns the hostname.
+          {
+            networking.hostName = hostname;
+            networking.computerName = hostname;
+            networking.localHostName = hostname;
+          }
+          ./darwin-configuration.nix
+          home-manager.darwinModules.home-manager
+          ./home.nix
+        ];
+      };
+    in
+    {
+      darwinConfigurations = nixpkgs.lib.mapAttrs mkDarwin hosts;
     };
-  };
 }
