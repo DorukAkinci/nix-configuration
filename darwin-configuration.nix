@@ -152,6 +152,7 @@
       "hyperkey" # Use your capslock key as a modifier
       "claude"
       "copilot-cli" # GitHub Copilot CLI (`copilot`) — Forge's primary GPT lane
+      "codex" # OpenAI Codex CLI — Forge's fallback GPT lane + Cato's audit path
       "antigravity-cli" # Google Antigravity CLI (`agy`) — agent terminal interface
       "chatgpt"
       "dbeaver-community"
