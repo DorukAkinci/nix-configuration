@@ -175,6 +175,7 @@
       "codex" # OpenAI Codex CLI — Forge's fallback GPT lane + Cato's audit path
       "antigravity-cli" # Google Antigravity CLI (`agy`) — agent terminal interface
       "chatgpt"
+      "lm-studio" # local LLM runner
       "dbeaver-community"
       "tailscale-app" # upstream renamed the `tailscale` cask
       "obsidian"
