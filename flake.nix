@@ -20,15 +20,18 @@
       # stay in lockstep by construction — hostname and account name are the
       # only inputs that differ. Build a specific host with:
       #   darwin-rebuild switch --flake ~/.nixpkgs#<HOSTNAME>
+      # nixbldGid: the Nix installer's build-group GID differs by install era —
+      # MacBook #1's older install created 30000, newer installers create 350.
+      # nix-darwin aborts activation on a mismatch, so each host pins its real value.
       hosts = {
-        TRENGDOAKMAC = { username = "dorukakinci"; }; # MacBook #1
+        TRENGDOAKMAC = { username = "dorukakinci"; nixbldGid = 30000; }; # MacBook #1
 
-        # MacBook #2 — uncomment and set the real hostname on first bootstrap.
-        # The account there is `doruk.akinci` (note the dot), not `dorukakinci`.
-        # NEWHOSTNAME = { username = "doruk.akinci"; };
+        # MacBook #2 — keeps its factory hostname on purpose: renaming a
+        # DEP/Intune-managed device would desync the MDM inventory record.
+        Doruks-MacBook-Pro = { username = "doruk.akinci"; nixbldGid = 350; };
       };
 
-      mkDarwin = hostname: { username }: darwin.lib.darwinSystem {
+      mkDarwin = hostname: { username, nixbldGid }: darwin.lib.darwinSystem {
         system = "aarch64-darwin"; # "x86_64-darwin" if you're using a pre M1 mac
         specialArgs = { inherit hostname username; };
         modules = [
@@ -37,6 +40,7 @@
             networking.hostName = hostname;
             networking.computerName = hostname;
             networking.localHostName = hostname;
+            ids.gids.nixbld = nixbldGid;
           }
           ./darwin-configuration.nix
           home-manager.darwinModules.home-manager

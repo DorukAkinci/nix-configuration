@@ -69,6 +69,7 @@
     tflint
     tfsec
     gh # github cli
+    bun # JS runtime — PAI hooks + Pulse depend on it (was a per-machine native install)
   ];
 
   # Enable experimental nix command and flakes
@@ -90,7 +91,10 @@
   homebrew = {
     enable = true;
     onActivation.autoUpdate = true;
-    brews = [ "rust" ];
+    brews = [
+      "rust"
+      "rtk" # token-optimizing CLI proxy (homebrew-core; hand-installed on #1 before this)
+    ];
     casks = [
       "visual-studio-code"
       "docker-desktop"
@@ -102,10 +106,11 @@
       "iterm2"
       "disk-inventory-x"
       "slack"
+      "telegram"
       "clickup"
       "gpg-suite"
       "fork"
-      "quik" # gopro
+      # "quik" # gopro — cask discontinued upstream (brew: "No available formula"), 2026-08-03
       "hammerspoon" # macos automation
       "raycast" # Spotlight alternative
       "hyperkey" # Use your capslock key as a modifier
