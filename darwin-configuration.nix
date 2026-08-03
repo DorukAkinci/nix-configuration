@@ -151,6 +151,7 @@
       "raycast" # Spotlight alternative
       "hyperkey" # Use your capslock key as a modifier
       "claude"
+      "cmux" # agent multiplexer app + CLI — primary Claude Code pane manager
       "copilot-cli" # GitHub Copilot CLI (`copilot`) — Forge's primary GPT lane
       "codex" # OpenAI Codex CLI — Forge's fallback GPT lane + Cato's audit path
       "antigravity-cli" # Google Antigravity CLI (`agy`) — agent terminal interface
