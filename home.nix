@@ -102,11 +102,14 @@ in {
               "cd ~/.claude && { [ -n \"$CMUX_WORKSPACE_ID\" ] && cmux claude-teams --dangerously-skip-permissions || claude --dangerously-skip-permissions; }";
           };
           initContent = ''
-            export PATH=/etc/profiles/per-user/${username}/bin:/opt/homebrew/bin:/opt/homebrew/opt/gnu-sed/libexec/gnubin:/run/current-system/sw/bin:${homeDir}/.local/bin:$PATH
+            # ~/.local/bin before homebrew: native installs (claude) must shadow brew copies
+            export PATH=/etc/profiles/per-user/${username}/bin:${homeDir}/.local/bin:/opt/homebrew/bin:/opt/homebrew/opt/gnu-sed/libexec/gnubin:/run/current-system/sw/bin:$PATH
             export EDITOR=nvim
             export VISUAL=nvim
             export GPG_TTY=$(tty)
-            eval "$(github-copilot-cli alias zsh)"
+            # deprecated 2023 preview CLI — only present on #1 as an npm global; guard so
+            # machines without it don't error on every new shell
+            command -v github-copilot-cli >/dev/null && eval "$(github-copilot-cli alias zsh)"
 
             # Granted - AWS SSO profile switcher
             alias assume="source assume"

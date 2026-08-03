@@ -94,6 +94,7 @@
     brews = [
       "rust"
       "rtk" # token-optimizing CLI proxy (homebrew-core; hand-installed on #1 before this)
+      "gemini-cli" # `gemini` — Google Gemini CLI (Pollux lane; hand-installed on #1 before this)
     ];
     casks = [
       "visual-studio-code"
@@ -115,6 +116,8 @@
       "raycast" # Spotlight alternative
       "hyperkey" # Use your capslock key as a modifier
       "claude"
+      "copilot-cli" # GitHub Copilot CLI (`copilot`) — Forge's primary GPT lane
+      "antigravity-cli" # Google Antigravity CLI (`agy`) — agent terminal interface
       "chatgpt"
       "dbeaver-community"
       "ghostty"
