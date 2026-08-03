@@ -33,12 +33,32 @@
       trackpad = { Clicking = false; };
 
       dock.autohide = false;
+
+      CustomUserPreferences = {
+        # Raycast reads its global hotkey from this key at launch; ⌘Space.
+        "com.raycast.macos".raycastGlobalHotkey = "Command-49";
+      };
     };
 
     keyboard = {
       enableKeyMapping = true;
       nonUS.remapTilde = true;
     };
+
+    # Spotlight ⌘Space → ⌥⌘Space so Raycast can own ⌘Space.
+    # Written with `-dict-add` instead of CustomUserPreferences because that
+    # module replaces the whole AppleSymbolicHotKeys dict, wiping every other
+    # hotkey entry on the machine.
+    # 64 = "Show Spotlight search"; 65 = "Show Finder search window", whose
+    # DEFAULT binding is ⌥⌘Space — it must be disabled to free the combo.
+    # parameters = [ascii, keycode, modifiers]: 32/49 = space, 1572864 = ⌥⌘.
+    activationScripts.postActivation.text = ''
+      sudo -u ${username} defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 64 \
+        "<dict><key>enabled</key><true/><key>value</key><dict><key>type</key><string>standard</string><key>parameters</key><array><integer>32</integer><integer>49</integer><integer>1572864</integer></array></dict></dict>"
+      sudo -u ${username} defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 65 \
+        "<dict><key>enabled</key><false/><key>value</key><dict><key>type</key><string>standard</string><key>parameters</key><array><integer>32</integer><integer>49</integer><integer>1572864</integer></array></dict></dict>"
+      sudo -u ${username} /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
+    '';
   };
 
   security.pam.services.sudo_local.touchIdAuth = true;
